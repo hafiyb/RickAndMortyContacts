@@ -1,14 +1,20 @@
 import Head from 'next/head';
 import {
   Box,
-  Grid,
   Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from '@mui/material';
-import ContactCard from '@/components/contactCard';
 import { useEffect, useState } from 'react';
 import { useDebounce } from '@/helper';
+import { useRouter } from 'next/router';
 
 const styles = {
   page: {
@@ -29,6 +35,14 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
   },
+  headerCell: {
+    color: 'inherit',
+    width: '50px',
+    backgroundColor: 'primary.main',
+  },
+  bodyCell: {
+    color: 'inherit',
+  },
 };
 
 interface ICharacters {
@@ -44,7 +58,8 @@ export default function Home() {
     results: [],
   });
 
-  const pageReset = useDebounce(filter,400)
+  const router = useRouter();
+
   const debouncedFilter = useDebounce(filter, 500);
 
   const handleFetch = () => {
@@ -53,23 +68,26 @@ export default function Home() {
     )
       .then((res) => res.json())
       .then((data) => setCharacters(data));
-  } 
+  };
   useEffect(() => {
-    handleFetch()
+    handleFetch();
   }, [page]);
 
   useEffect(() => {
-    setPage(1)
-    if(page === 1){
-      handleFetch()
+    setPage(1);
+    if (page === 1) {
+      handleFetch();
     }
-  }, [debouncedFilter])
+  }, [debouncedFilter]);
 
   return (
     <>
       <Head>
         <title>Contact List - SleekFlow</title>
-        <meta name='description' content='View our list of contacts with their related information' />
+        <meta
+          name='description'
+          content='View our list of contacts with their related information'
+        />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
@@ -80,40 +98,50 @@ export default function Home() {
             py: '5%',
           }}
         >
-          <Typography sx={{my:2, fontSize:'28px'}}>
-            Contacts
-          </Typography>
+          <Typography sx={{ my: 2, fontSize: '28px' }}>Contacts</Typography>
           <TextField
             placeholder='Search here'
             onChange={(e) => setFilter(e.target.value)}
           />
         </Box>
-        <Grid container sx={{ px: 2 }}>
-          <Grid item xs={3} sx={styles.gridItem}>
-            <Typography>Name</Typography>
-          </Grid>
-          <Grid item xs={3} sx={styles.gridItem}>
-            <Typography>Status</Typography>
-          </Grid>
-          <Grid item xs={3} sx={styles.gridItem}>
-            <Typography>Species</Typography>
-          </Grid>
-          <Grid item xs={3} sx={styles.gridItem}>
-            <Typography>Gender</Typography>
-          </Grid>
-        </Grid>
-        <Box sx={{ width: '100%', height: '70%', overflow: 'auto' }}>
-          {characters?.results?.map((character: any, index: number) => (
-            <ContactCard
-              key={index}
-              id={character.id}
-              name={character.name}
-              status={character.status}
-              species={character.species}
-              gender={character.gender}
-            />
-          ))}
-        </Box>
+        {/* =================================================================================== */}
+        {/* Contact list table starts here */}
+        {/* =================================================================================== */}
+        <TableContainer component={Paper} sx={{ height: '70%' }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={styles.headerCell}>Name</TableCell>
+                <TableCell sx={styles.headerCell}>Status</TableCell>
+                <TableCell sx={styles.headerCell}>Species</TableCell>
+                <TableCell sx={styles.headerCell}>Gender</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {characters?.results?.map((character: any, index: number) => (
+                <TableRow
+                  onClick={() => router.push(`contact/${character.id}`)}
+                  sx={{
+                    ':hover': {
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      cursor: 'pointer',
+                    },
+                  }}
+                >
+                  <TableCell sx={styles.bodyCell}>{character.name}</TableCell>
+                  <TableCell sx={styles.bodyCell}>{character.status}</TableCell>
+                  <TableCell sx={styles.bodyCell}>
+                    {character.species}
+                  </TableCell>
+                  <TableCell sx={styles.bodyCell}>{character.gender}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {/* =================================================================================== */}
+        {/* End of contact list table */}
+        {/* =================================================================================== */}
         <Pagination
           sx={{
             my: 2,
