@@ -97,8 +97,8 @@ const CharacterPage = (prop: Prop) => {
         <Box sx={styles.sectionContainer}>
           <Typography>Episodes</Typography>
           <Box sx={{ width: '100%', maxHeight: '500px', overflow: 'auto' }}>
-            {episodes.map((ep: any) => (
-              <EpisodeCard episode={ep} />
+            {episodes.map((ep: any, index: number) => (
+              <EpisodeCard episode={ep} key={index}/>
             ))}
           </Box>
         </Box>

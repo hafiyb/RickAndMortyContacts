@@ -127,6 +127,7 @@ export default function Home() {
                       cursor: 'pointer',
                     },
                   }}
+                  key={index}
                 >
                   <TableCell sx={styles.bodyCell}>{character.name}</TableCell>
                   <TableCell sx={styles.bodyCell}>{character.status}</TableCell>
