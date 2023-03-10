@@ -18,7 +18,7 @@ const styles = {
       sm: '20%',
     },
     py: 3,
-    m: 4,
+    my: 4,
     borderRadius: 2,
   },
   sectionContainer: {
@@ -26,7 +26,7 @@ const styles = {
     flexDirection: 'column',
     backgroundColor: 'primary.main',
     p: 2,
-    m: 4,
+    my: 4,
     borderRadius: 2,
   },
 };
@@ -63,8 +63,11 @@ const CharacterPage = (prop: Prop) => {
             component='img'
             src={character.image}
             sx={{
-              width: '200px',
-              height: '200px',
+              width:{
+                xs:'100px',
+                sm:'200px'
+              },
+              aspectRatio:1,
               borderRadius: '50%',
               border: '5px solid',
               borderColor: 'primary.main',
